@@ -35,7 +35,7 @@ var startMQTTClient = function (options, processConfig, shutdownCB) {
         message = JSON.parse(buffer.toString());
       }
       catch (e) {
-        setStatus('MSG_ERR', 'Invalid JSON');
+//        setStatus('MSG_ERR', 'Invalid JSON');
         publishError('INVALID_JSON', e);
       }
     }
