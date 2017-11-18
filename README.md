@@ -13,15 +13,15 @@ containers and handles LV-CAP requirements for:
 
 # API
 
-* [`lvcap.**start()**`](#start)
-* [`lvcap.**stop()**`](#stop)
-* [`lvcap.**setStatus()**`](#setStatus)
-* [`lvcap.**publish()**`](#publish)
-* [`lvcap.**pubError()**`](#pubError)
-* [`lvcap.**subscribe()**`](#subscribe)
-* [`lvcap.**unsubscribe()**`](#unsubscribe)
-* [`lvcap.**config**`](#config)
-* [`lvcap.**messages**`](#messages)
+* [`lvcap.start()`](#start)
+* [`lvcap.stop()`](#stop)
+* [`lvcap.setStatus()`](#setStatus)
+* [`lvcap.publish()`](#publish)
+* [`lvcap.pubError()`](#pubError)
+* [`lvcap.subscribe()`](#subscribe)
+* [`lvcap.unsubscribe()`](#unsubscribe)
+* [`lvcap.config`](#config)
+* [`lvcap.messages`](#messages)
 
 <a name="start"></a>
 ### lvcap.start(options, configurationCallback, [shutdownCallback])
@@ -42,7 +42,7 @@ The arguments are:
   * `keyPath`: relative path to private key file, only used for MQTTS
   * `certPath`: relative path to certificate file, onlye used for MQTTS
 * `configurationCallback` is called when valid configuration is received from  
-    the CM. You can access this configuration at [`lvcap.**config**`](#config)
+    the CM. You can access this configuration at [`lvcap.config`](#config)
 * `shutdownCallback` is called when a shutdown command is received and before  
     the MQTT connection is closed. This is where you should unsubscribe to any  
     topics you subscribed to, and perform any data cleanup necessary.
@@ -55,7 +55,7 @@ This is what is called when a shutdown command is received from the CM.
 <a name="setStatus"></a>
 ### lvcap.setStatus(status, [errorMessage], [callback])
 Set a `status`, and publish it to the CM. Choose the appropriate status text from
-the [enumerated list](./message_enum.js#L8). For `MSG_FAIL` and `MSG_ERR` be
+the [enumerated list](./message_enums.js#L8). For `MSG_FAIL` and `MSG_ERR` be
 sure to set `errorMessage`.
 
 If you want to use a `callback` without an `errorMessage`, be sure to pass
@@ -68,7 +68,7 @@ Publish a `message` to an MQTT `topic`.
 <a name="pubError"></a>
 ### lvcap.pubError(error, [message], [callback])
 Publish an `error` with an optional error `message` Choose the appropriate
-error text from the [enumerated list](./message_enum.js#L27).
+error text from the [enumerated list](./message_enums.js#L27).
 
 If you want to use a `callback` without a `message`, be sure to pass `undefined`
 as the second argument.
@@ -87,4 +87,4 @@ A JS object containing the most recently received configuration from the CM.
 
 <a name="messages"></a>
 ### lvcap.messages
-An array containing all unrecognized messages received from the MQTT broker. 
+An array containing all unrecognized messages received from the MQTT broker.
