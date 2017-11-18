@@ -4,6 +4,7 @@ Networks (LV-CAP). This README covers:
 
 * [Overview](#overview)
 * [Installation](#installation)
+* [Example](#exampleusage)
 * [API](#api)
 
 # Overview
@@ -19,7 +20,7 @@ containers and handles LV-CAP requirements for:
 ```sh
 npm install lv-cap
 ```
-# Example
+# Example Usage
 ```js
 var lvcap = require('lv-cap');
 
