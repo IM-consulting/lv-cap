@@ -4,7 +4,7 @@ Networks (LV-CAP). This README covers:
 
 * [Overview](#overview)
 * [Installation](#installation)
-* [Example](#example-usage)
+* [Example Usage](#example-usage)
 * [API](#api)
 
 # Overview
