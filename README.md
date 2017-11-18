@@ -1,6 +1,10 @@
 # lv-cap
 NPM package for interfacing with the Common Application Platform for Low Voltage
-Networks (LV-CAP)
+Networks (LV-CAP). This README covers:
+
+* [Overview](#overview)
+* [Installation](#installation)
+* [API](#api)
 
 # Overview
 LV-CAP runs Docker containers which are controlled by a Container Manager (CM)
@@ -10,6 +14,34 @@ containers and handles LV-CAP requirements for:
 * Basic startup/shutdown procedures
 * MQTT management
 * Responding to commands/requests from the CM
+
+# Installation
+```sh
+npm install lv-cap
+```
+# Example
+```js
+var lvcap = require('lv-cap');
+
+var options = {
+  containerId: 'vendor_appName_appVersion',
+  debug: true,
+  MQQTS: true,
+  keyPath: './private_key.pem',
+  certPath: './certificate.pem'
+};
+
+var configurationCB = function () {
+  //run your application init code here
+  var config = lvcap.config; //access the received configuration
+};
+
+var shutdownCB = function () {
+  //run your application shutdown code here, eg. unsubscribe from topics
+}
+
+lvcap.init(options, configurationCB, shutdownCB);
+```
 
 # API
 
