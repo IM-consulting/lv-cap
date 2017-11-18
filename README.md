@@ -6,6 +6,7 @@ Networks (LV-CAP). This README covers:
 * [Installation](#installation)
 * [Example Usage](#example-usage)
 * [API](#api)
+* [License](#license)
 
 # Overview
 LV-CAP runs Docker containers which are controlled by a Container Manager (CM)
@@ -121,3 +122,6 @@ A JS object containing the most recently received configuration from the CM.
 <a name="messages"></a>
 ### lvcap.messages
 An array containing all unrecognized messages received from the MQTT broker.
+
+# License
+[Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0.html)
