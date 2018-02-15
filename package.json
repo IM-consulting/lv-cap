@@ -1,6 +1,6 @@
 {
   "name": "lv-cap",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Package for interfacing with LV-CAP",
   "main": "index.js",
   "scripts": {

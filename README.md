@@ -26,16 +26,15 @@ npm install lv-cap
 var lvcap = require('lv-cap');
 
 var options = {
-  containerId: 'vendor_appName_appVersion',
-  debug: true,
-  MQQTS: true,
+  containerId: 'vendor_appName_version_instance',
   keyPath: './private_key.pem',
   certPath: './certificate.pem'
+  debug: true,  
 };
 
-var configurationCB = function () {
+var configurationCB = function (newConfig) {
   //run your application init code here
-  var config = lvcap.config; //access the received configuration
+
 };
 
 var shutdownCB = function () {
@@ -59,22 +58,20 @@ lvcap.init(options, configurationCB, shutdownCB);
 
 <a name="start"></a>
 ### lvcap.start(options, configurationCallback, [shutdownCallback])
-Containers running on LV-CAP are not allowed to do anything until an MQTT
-connection is initialized and a configuration package is sent to the container.
-Thus, `start` should be the first code your container runs, with your specific
-init code inside of `configurationCallback`. The CM might send configuration
-multiple times, and the `configurationCallback` will be called each time; so
-make sure your init code is ready for this.
+Containers running on LV-CAP are required to connect to the CM and receive
+configuration before initializing any custom code. Thus, `start` must be the
+first code your container runs, with your specific init code inside of
+`configurationCallback`. The CM can send configuration multiple times, and the
+`configurationCallback` will be called each time; so make sure your init code is
+ready for this.
 
 The arguments are:
 
-* `options` is an object that sets details for the MQTT connection and CM
-  * `containerId` is the ID assigned to your container by the LV-CAP admin, this  
-      is the only required option.
-  * `debug`: `false`, set to true if you want to console.log() events
-  * `MQTTS`: `false`, set to true for secured (tls) MQTT communications
-  * `keyPath`: relative path to private key file, only used for MQTTS
-  * `certPath`: relative path to certificate file, onlye used for MQTTS
+* `options` for connecting to the MQTT broker
+  * `containerId` is the ID assigned to your container by the LV-CAP admin
+  * `keyPath`: relative path to private key file
+  * `certPath`: relative path to certificate file
+  * `debug`: `false`, set to true if you want to console.log() events (optional)  
 * `configurationCallback` is called when valid configuration is received from  
     the CM. You can access this configuration at [`lvcap.config`](#config)
 * `shutdownCallback` is called when a shutdown command is received and before  

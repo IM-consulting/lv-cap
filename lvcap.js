@@ -7,6 +7,7 @@ var client;
 
 var containerState = enums.status.INITIAL;
 var containerErrorMessage;
+var presentConfig;
 var debug;
 var id = '';
 
@@ -17,7 +18,7 @@ var startMQTTClient = function (options, processConfig, shutdownCB) {
 
   lvcapDebug('connecting to mqtt broker');
 
-  client = mqtt.connect([{ host: 'localhost', port: 1883 }], options.mqtt);
+  client = mqtt.connect(options.connection);
 
   client.on('connect', function () {
     lvcapDebug('connected');
@@ -35,7 +36,6 @@ var startMQTTClient = function (options, processConfig, shutdownCB) {
         message = JSON.parse(buffer.toString());
       }
       catch (e) {
-//        setStatus('MSG_ERR', 'Invalid JSON');
         publishError('INVALID_JSON', e);
       }
     }
@@ -54,8 +54,8 @@ var startMQTTClient = function (options, processConfig, shutdownCB) {
       var config = parseConfig(message);
       if (config) {
         setStatus('MSG_OK');
-        lvcap.config = config;
-        if (processConfig) processConfig();
+        presentConfig = config;
+        if (processConfig) processConfig(config);
       }
       else {
         setStatus('MSG_ERR', 'Bad config file');
@@ -199,7 +199,7 @@ var lvcap = {
   pubError: publishError,
   subscribe: subWrapper,
   unsubscribe: unsubWrapper,
-  config: {},
+  config: presentConfig,
   messages: []
 };
 
