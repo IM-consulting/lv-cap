@@ -73,7 +73,7 @@ var startMQTTClient = function (options, processConfig, shutdownCB) {
     default:
       if (subscriptions[topic] && Array.isArray(subscriptions[topic])) {
         subscriptions[topic].forEach(function (cb) {
-          cb(topic);
+          cb(message);
         });
       }
       else
