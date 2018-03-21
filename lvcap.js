@@ -24,7 +24,7 @@ var startMQTTClient = function (options, processConfig, shutdownCB) {
   client.on('connect', function () {
     lvcapDebug('connected');
     lvcap.subscribe('status/request');
-    lvcap.subscribe('config/response/'+id, function (){
+    lvcap.subscribe('config/response/'+id, null, function (){
       lvcap.publish('config/request/'+id, '');
     });
     lvcap.subscribe('command/'+id);
@@ -71,7 +71,11 @@ var startMQTTClient = function (options, processConfig, shutdownCB) {
         }
         break;
     default:
-      if (subscriptions[topic]) subscriptions[topic](message);
+      if (subscriptions[topic] && Array.isArray(subscriptions[topic])) {
+        subscriptions[topic].forEach(function (cb) {
+          cb(topic);
+        });
+      }
       else
         lvcap.messages.push({
           topic: topic,
@@ -90,9 +94,7 @@ var startMQTTClient = function (options, processConfig, shutdownCB) {
 };
 
 var stopMQTTClient = function () {
-  for(var key in subscriptions) {
-    lvcap.unsubscribe(key);
-  }
+  lvcap.cleanupSubs();
   subscriptions = {};
   lvcap.unsubscribe('status/request', function () {
     lvcap.unsubscribe('config/response/'+id, function () {
@@ -171,7 +173,13 @@ var subWrapper = function (topic, onMessageCB, callback) {
       publishError('MQTT_SUBSCRIPTION', err);
     }
     else {
-      if (onMessageCB) subscriptions[topic] = onMessageCB;
+      if (onMessageCB) {
+        if (subsriptions[topic]) {
+          subscriptions[topic].push(onMessageCB);
+        }
+        else
+        subscriptions[topic] = [onMessageCB];
+      }
       if (callback) callback();
     }
   });
@@ -185,8 +193,17 @@ var unsubWrapper = function (topic, callback) {
                 '=/=/=/=/=/=/=/=/='
               ]);
     if (err) publishError('MQTT_SUBSCRIPTION', err);
-    else if (callback) callback();
+    else {
+      if (subscriptions[topic]) delete subscriptions[topic];
+      if (callback) callback();
+    }
   });
+};
+
+var unsubSubs = function () {
+  for(var key in subscriptions) {
+    lvcap.unsubscribe(key);
+  }
 };
 
 var lvcapDebug = function (debugMsg) {
@@ -204,6 +221,7 @@ var lvcapDebug = function (debugMsg) {
 var lvcap = {
   startup: startMQTTClient,
   shutdown: stopMQTTClient,
+  cleanupSubs: unsubSubs,
   setStatus: setStatus,
   publish: pubWrapper,
   pubError: publishError,
