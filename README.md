@@ -110,6 +110,8 @@ as the second argument.
 Subscribe to an MQTT `topic`. `onMessage` is called with a `message` as its only
 argument when received on `topic`, the third argument is called on verification
 of a successful subscription.
+LV-CAP allows multiple subscriptions to the same topic, but this API only
+supports up to 10 different callbacks on the same topic.
 
 <a name="unsubscribe"></a>
 ### lvcap.unsubscribe(topic, [callback])
@@ -117,7 +119,8 @@ Unsubscribe from an MQTT `topic`.
 
 <a name="cleanup"></a>
 ### lvcap.cleanupSubs()
-Unsubscribe from all MQTT subscriptions made via [`lvcap.subscribe()`](#subscribe).
+Unsubscribe and remove callbacks from all MQTT subscriptions made via
+[`lvcap.subscribe()`](#subscribe).
 
 <a name="config"></a>
 ### lvcap.config

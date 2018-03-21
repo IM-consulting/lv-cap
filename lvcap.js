@@ -174,8 +174,12 @@ var subWrapper = function (topic, onMessageCB, callback) {
     }
     else {
       if (onMessageCB) {
-        if (subsriptions[topic]) {
+        if (subscriptions[topic]) {
           subscriptions[topic].push(onMessageCB);
+          var numCBs = subscriptions[topic].length;
+          if(numCBs > 10) {
+            subscriptions[topic] = subscriptions[topic].slice(numCBs - 10);
+          }
         }
         else
         subscriptions[topic] = [onMessageCB];
@@ -221,12 +225,12 @@ var lvcapDebug = function (debugMsg) {
 var lvcap = {
   startup: startMQTTClient,
   shutdown: stopMQTTClient,
-  cleanupSubs: unsubSubs,
   setStatus: setStatus,
   publish: pubWrapper,
   pubError: publishError,
   subscribe: subWrapper,
   unsubscribe: unsubWrapper,
+  cleanupSubs: unsubSubs,
   config: presentConfig,
   messages: []
 };
