@@ -26,7 +26,7 @@ npm install lv-cap
 var lvcap = require('lv-cap');
 
 var options = {
-  containerId: 'vendor_appName_version_instance',
+  containerId: 'vendor_appName_instance',
   keyPath: './private_key.pem',
   certPath: './certificate.pem'
   debug: true,  
@@ -105,9 +105,10 @@ If you want to use a `callback` without a `message`, be sure to pass `undefined`
 as the second argument.
 
 <a name="subscribe"></a>
-### lvcap.subscribe(topic, [onMessageCallback], [callback])
-Subscribe to an MQTT `topic`. Second argument is called with a message when
-received on `topic`, third argument is called on successful subscription.
+### lvcap.subscribe(topic, [onMessage], [callback])
+Subscribe to an MQTT `topic`. `onMessage` is called with a `message` as its only
+argument when received on `topic`, the third argument is called on verification
+of a successful subscription.
 
 <a name="unsubscribe"></a>
 ### lvcap.unsubscribe(topic, [callback])
