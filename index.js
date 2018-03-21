@@ -53,10 +53,10 @@ module.exports = {
   start: init,
   stop: lvcap.shutdown,
   setStatus: lvcap.setStatus,
-  publish: lvcap.pubWrapper,
+  publish: lvcap.publish,
   pubError: lvcap.pubError,
-  subscribe: lvcap.subWrapper,
-  unsubscribe: lvcap.unsubWrapper,
+  subscribe: lvcap.subscribe,
+  unsubscribe: lvcap.unsubscribe,
   config: lvcap.config,
   messages: lvcap.messages
 };

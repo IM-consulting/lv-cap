@@ -11,6 +11,7 @@ var presentConfig;
 var debug;
 var id = '';
 
+var subscriptions = {};
 
 var startMQTTClient = function (options, processConfig, shutdownCB) {
   id = options.containerId;
@@ -70,11 +71,13 @@ var startMQTTClient = function (options, processConfig, shutdownCB) {
         }
         break;
     default:
-      lvcap.messages.push({
-        topic: topic,
-        message: message,
-        timestamp: (new Date()).getTime()
-      });
+      if (subscriptions[topic]) subscriptions[topic](message);
+      else
+        lvcap.messages.push({
+          topic: topic,
+          message: message,
+          timestamp: (new Date()).getTime()
+        });
     }
   });
 
@@ -87,6 +90,10 @@ var startMQTTClient = function (options, processConfig, shutdownCB) {
 };
 
 var stopMQTTClient = function () {
+  for(var key in subscriptions) {
+    lvcap.unsubscribe(key);
+  }
+  subscriptions = {};
   lvcap.unsubscribe('status/request', function () {
     lvcap.unsubscribe('config/response/'+id, function () {
       lvcap.unsubscribe('command/'+id, function () {
@@ -153,7 +160,7 @@ var pubWrapper = function (topic, message, options, callback) {
   }
 };
 
-var subWrapper = function (topic, callback) {
+var subWrapper = function (topic, onMessageCB, callback) {
   client.subscribe(topic, function (err, granted){
     lvcapDebug(['=================',
                 'subscribing to -- ' + topic,
@@ -163,7 +170,10 @@ var subWrapper = function (topic, callback) {
     if (err) {
       publishError('MQTT_SUBSCRIPTION', err);
     }
-    else if (callback) callback();
+    else {
+      if (onMessageCB) subscriptions[topic] = onMessageCB;
+      if (callback) callback();
+    }
   });
 };
 

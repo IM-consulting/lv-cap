@@ -38,7 +38,7 @@ var configurationCB = function (newConfig) {
 };
 
 var shutdownCB = function () {
-  //run your application shutdown code here, eg. unsubscribe from topics
+  //run your application shutdown code here
 }
 
 lvcap.init(options, configurationCB, shutdownCB);
@@ -75,8 +75,8 @@ The arguments are:
 * `configurationCallback` is called when valid configuration is received from  
     the CM. You can access this configuration at [`lvcap.config`](#config)
 * `shutdownCallback` is called when a shutdown command is received and before  
-    the MQTT connection is closed. This is where you should unsubscribe to any  
-    topics you subscribed to, and perform any data cleanup necessary.
+    the MQTT connection is closed. This is where you should perform any data
+    cleanup necessary, subscriptions are automatically cleaned up.
 
 <a name="stop"></a>
 ### lvcap.stop()
@@ -105,8 +105,9 @@ If you want to use a `callback` without a `message`, be sure to pass `undefined`
 as the second argument.
 
 <a name="subscribe"></a>
-### lvcap.subscribe(topic, [callback])
-Subscribe to an MQTT `topic`.
+### lvcap.subscribe(topic, [onMessageCallback], [callback])
+Subscribe to an MQTT `topic`. Second argument is called with a message when
+received on `topic`, third argument is called on successful subscription.
 
 <a name="unsubscribe"></a>
 ### lvcap.unsubscribe(topic, [callback])
