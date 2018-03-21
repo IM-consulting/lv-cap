@@ -53,6 +53,7 @@ lvcap.init(options, configurationCB, shutdownCB);
 * [`lvcap.pubError()`](#pubError)
 * [`lvcap.subscribe()`](#subscribe)
 * [`lvcap.unsubscribe()`](#unsubscribe)
+* [`lvcap.cleanupSubs()`](#cleanup)
 * [`lvcap.config`](#config)
 * [`lvcap.messages`](#messages)
 
@@ -113,6 +114,10 @@ of a successful subscription.
 <a name="unsubscribe"></a>
 ### lvcap.unsubscribe(topic, [callback])
 Unsubscribe from an MQTT `topic`.
+
+<a name="cleanup"></a>
+### lvcap.cleanupSubs()
+Unsubscribe from all MQTT subscriptions made via [`lvcap.subscribe()`](#subscribe).
 
 <a name="config"></a>
 ### lvcap.config
