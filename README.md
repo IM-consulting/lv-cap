@@ -81,7 +81,7 @@ The arguments are:
 
 <a name="stop"></a>
 ### lvcap.stop()
-Manually shutdown the MQTT client, after unsubscribing to the default topics.
+Manually shutdown the MQTT client and unsubscribe from all active subscriptions.
 This is what is called when a shutdown command is received from the CM.
 
 <a name="setStatus"></a>
@@ -110,8 +110,12 @@ as the second argument.
 Subscribe to an MQTT `topic`. `onMessage` is called with a `message` as its only
 argument when received on `topic`, the third argument is called on verification
 of a successful subscription.
+
 LV-CAP allows multiple subscriptions to the same topic, but this API only
 supports up to 10 different callbacks on the same topic.
+
+If you want to use a `callback` without an `onMessage` callback, be sure to pass
+`undefined` as the second argument.
 
 <a name="unsubscribe"></a>
 ### lvcap.unsubscribe(topic, [callback])
@@ -119,7 +123,7 @@ Unsubscribe from an MQTT `topic`.
 
 <a name="cleanup"></a>
 ### lvcap.cleanupSubs()
-Unsubscribe and remove callbacks from all MQTT subscriptions made via
+Manually unsubscribe and remove callbacks from all MQTT subscriptions made via
 [`lvcap.subscribe()`](#subscribe).
 
 <a name="config"></a>
@@ -128,7 +132,9 @@ A JS object containing the most recently received configuration from the CM.
 
 <a name="messages"></a>
 ### lvcap.messages
-An array containing all unrecognized messages received from the MQTT broker.
+An array containing all messages received from the MQTT broker that are from
+topics subscribed to via [`lvcap.subscribe()`](#subscribe) without any
+`onMessage` callbacks.
 
 # License
 [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0.html)
