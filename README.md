@@ -111,8 +111,8 @@ Subscribe to an MQTT `topic`. `onMessage` is called with a `message` as its only
 argument when received on `topic`, the third argument is called on verification
 of a successful subscription.
 
-LV-CAP allows multiple subscriptions to the same topic, but this API only
-supports up to 10 different callbacks on the same topic.
+If you resubscribe to the same topic, only the most recent `onMessage` callback
+will be triggered.
 
 If you want to use a `callback` without an `onMessage` callback, be sure to pass
 `undefined` as the second argument.

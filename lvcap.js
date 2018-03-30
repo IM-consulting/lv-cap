@@ -71,11 +71,7 @@ var startMQTTClient = function (options, processConfig, shutdownCB) {
         }
         break;
     default:
-      if (subscriptions[topic] && Array.isArray(subscriptions[topic])) {
-        subscriptions[topic].forEach(function (cb) {
-          cb(message);
-        });
-      }
+      if (subscriptions[topic]) subscriptions[topic](message);
       else
         lvcap.messages.push({
           topic: topic,
@@ -173,17 +169,7 @@ var subWrapper = function (topic, onMessageCB, callback) {
       publishError('MQTT_SUBSCRIPTION', err);
     }
     else {
-      if (onMessageCB) {
-        if (subscriptions[topic]) {
-          subscriptions[topic].push(onMessageCB);
-          var numCBs = subscriptions[topic].length;
-          if(numCBs > 10) {
-            subscriptions[topic] = subscriptions[topic].slice(numCBs - 10);
-          }
-        }
-        else
-        subscriptions[topic] = [onMessageCB];
-      }
+      if (onMessageCB) subscriptions[topic] = onMessageCB;
       if (callback) callback();
     }
   });
