@@ -23,11 +23,11 @@ var startMQTTClient = function (options, processConfig, shutdownCB) {
 
   client.on('connect', function () {
     lvcapDebug('connected');
-    lvcap.subscribe('status/request');
-    lvcap.subscribe('config/response/'+id, null, function (){
-      lvcap.publish('config/request/'+id, '');
+    subWrapper('status/request');
+    subWrapper('config/response/'+id, null, function (){
+      pubWrapper('config/request/'+id, '');
     });
-    lvcap.subscribe('command/'+id);
+    subWrapper('command/'+id);
   });
 
   client.on('message', function (topic, buffer) {
@@ -92,9 +92,9 @@ var startMQTTClient = function (options, processConfig, shutdownCB) {
 var stopMQTTClient = function () {
   lvcap.cleanupSubs();
   subscriptions = {};
-  lvcap.unsubscribe('status/request', function () {
-    lvcap.unsubscribe('config/response/'+id, function () {
-      lvcap.unsubscribe('command/'+id, function () {
+  unsubWrapper('status/request', function () {
+    unsubWrapper('config/response/'+id, function () {
+      unsubWrapper('command/'+id, function () {
         setStatus('SHUT_DWN', undefined, function () {
           client.end();
         });
@@ -116,7 +116,7 @@ var publishStatus = function (callback) {
     Timestamp: Math.round((new Date()).getTime() / 1000)
   };
 
-  lvcap.publish(statusTopic, JSON.stringify(status), undefined, callback);
+  pubWrapper(statusTopic, JSON.stringify(status), undefined, callback);
 };
 
 var setStatus = function (state, message, callback) {
@@ -134,7 +134,7 @@ var publishError = function (errorName, message, callback) {
       Timestamp: Math.round((new Date()).getTime() / 1000)
   };
 
-  lvcap.publish(errorTopic, JSON.stringify(error), undefined, callback);
+  pubWrapper(errorTopic, JSON.stringify(error), undefined, callback);
 };
 
 var pubWrapper = function (topic, message, options, callback) {
@@ -224,7 +224,7 @@ var unsubAPI = function (topic, callback) {
 
 var unsubSubs = function () {
   for(var key in subscriptions) {
-    lvcap.unsubscribe(key);
+    unsubAPI(key);
   }
 };
 
