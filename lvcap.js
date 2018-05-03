@@ -175,6 +175,22 @@ var subWrapper = function (topic, onMessageCB, callback) {
   });
 };
 
+var subAPI = function (topic, onMessageCB, callback) {
+  if (topic === '#' ||
+      topic.substring(0, 7) === 'status/' ||
+      topic.substring(0, 7) === 'config/' ||
+      topic.substring(0, 8) === 'command/') {
+    lvcapDebug(['=================',
+                'container attempted to sub to key topic:',
+                topic,
+                '================='
+              ]);
+  }
+  else {
+    subWrapper(topic, onMessageCB, callback);
+  }
+};
+
 var unsubWrapper = function (topic, callback) {
   client.unsubscribe(topic, function (err) {
     lvcapDebug(['=/=/=/=/=/=/=/=/=',
@@ -188,6 +204,22 @@ var unsubWrapper = function (topic, callback) {
       if (callback) callback();
     }
   });
+};
+
+var unsubAPI = function (topic, callback) {
+  if (topic === '#' ||
+      topic.substring(0, 7) === 'status/' ||
+      topic.substring(0, 7) === 'config/' ||
+      topic.substring(0, 8) === 'command/') {
+    lvcapDebug(['=/=/=/=/=/=/=/=/=',
+                'container attempted to unsubscribe from key topic:',
+                topic,
+                '=/=/=/=/=/=/=/=/='
+              ]);
+  }
+  else {
+    unsubWrapper(topic, callback);
+  }
 };
 
 var unsubSubs = function () {
@@ -214,8 +246,8 @@ var lvcap = {
   setStatus: setStatus,
   publish: pubWrapper,
   pubError: publishError,
-  subscribe: subWrapper,
-  unsubscribe: unsubWrapper,
+  subscribe: subAPI,
+  unsubscribe: unsubAPI,
   cleanupSubs: unsubSubs,
   config: presentConfig,
   messages: []
