@@ -4,10 +4,11 @@ var fs = require('fs');
 /*******************************
 init arguments:
   options {
-    containerId -- LV-CAP container ID (required)
-    keyPath     -- filepath to MQTTS key (required)
-    certPath    -- filepath to MQTTS certificate (required)
-    debug       -- set to true for debug logging (optional)
+    containerId         -- LV-CAP container ID (required)
+    keyPath             -- filepath to MQTTS key (required)
+    certPath            -- filepath to MQTTS certificate (required)
+    debug               -- set to true for debug logging (optional)
+    rejectUnauthorized  -- set to true for prduction certs
   }
   configCB() -- callback whenever the CM sends a container configuration message
   shutdownCB() -- callback before MQTT client is terminated, tidy up here
@@ -28,8 +29,9 @@ var init = function (options, configCB, shutdownCB) {
       port: 8883,
       host: 'localhost',
       protocol: 'mqtts',
-      rejectUnauthorized: false //for self signed certs while developing
-      //set to true for production
+      rejectUnauthorized: options.rejectUnauthorized || false
+        //false for self signed certs (development)
+        //true for full certs (production)
     }
   };
 
