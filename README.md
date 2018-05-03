@@ -96,8 +96,13 @@ If you want to use a `callback` without an `errorMessage`, be sure to pass
 `undefined` as the second argument.
 
 <a name="publish"></a>
-### lvcap.publish(topic, message, [callback])
-Publish a `message` to an MQTT `topic`.
+### lvcap.publish(topic, message, [settings], [callback])
+Publish a `message` to an MQTT `topic`, with optional `settings` passed directly
+to the MQTT package's
+[publish function](https://www.npmjs.com/package/mqtt#publish).
+
+If you want to use a `callback` without changing default `settings`, be sure to
+pass `{}` as the third argument.
 
 <a name="pubError"></a>
 ### lvcap.pubError(error, [message], [callback])
@@ -129,7 +134,7 @@ If you want to use a `callback` without an `onMessage` callback, be sure to pass
 Unsubscribe from an MQTT `topic`.
 
 You will not be able to unsubscribe from certain topics, as they are used by the
-CM: 
+CM:
 ```
 '#', 'status/#', 'config/#', 'command/#'
 ```
