@@ -29,7 +29,8 @@ var options = {
   containerId: 'vendor_appName_instance',
   keyPath: './private_key.pem',
   certPath: './certificate.pem'
-  debug: true,  
+  debug: true,
+  rejectUnauthorized: true
 };
 
 var configurationCB = function (newConfig) {
@@ -73,6 +74,7 @@ The arguments are:
   * `keyPath`: relative path to private key file
   * `certPath`: relative path to certificate file
   * `debug`: `false`, set to true if you want to console.log() events (optional)  
+  * `rejectUnauthorized`: `false`, set to true for production (optional)
 * `configurationCallback` is called when valid configuration is received from  
     the CM. You can access this configuration at [`lvcap.config`](#config)
 * `shutdownCallback` is called when a shutdown command is received and before  
@@ -111,6 +113,11 @@ Subscribe to an MQTT `topic`. `onMessage` is called with a `message` as its only
 argument when received on `topic`, the third argument is called on verification
 of a successful subscription.
 
+You will not be able to subscribe to certain topics, as they are used by the CM:
+```
+'#', 'status/#', 'config/#', 'command/#'
+```
+
 If you resubscribe to the same topic, only the most recent `onMessage` callback
 will be triggered.
 
@@ -120,6 +127,12 @@ If you want to use a `callback` without an `onMessage` callback, be sure to pass
 <a name="unsubscribe"></a>
 ### lvcap.unsubscribe(topic, [callback])
 Unsubscribe from an MQTT `topic`.
+
+You will not be able to unsubscribe from certain topics, as they are used by the
+CM: 
+```
+'#', 'status/#', 'config/#', 'command/#'
+```
 
 <a name="cleanup"></a>
 ### lvcap.cleanupSubs()
